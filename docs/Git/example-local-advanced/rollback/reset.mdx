@@ -1,0 +1,57 @@
+---
+sidebar_position: 3
+---
+
+# Reset a Commit
+
+接著我們來看看 reset。
+
+開個新的 branch 叫 `doc/tech-stack`，並且切換到上面。
+
+```bash
+$ git branch doc/tech-stack && git switch doc/tech-stack
+```
+
+並且新增點內容，再 commit：
+
+```bash
+$ echo "## Tech Stack\nNot desirable change" >> README.md && git add README.md && git commit -m "Not desirable change"
+```
+
+接著看 log:
+
+```bash
+$ git log --oneline
+d277c42 (HEAD -> doc/tech-stack) Not desirable change
+634fee5 (main) Revert "Not desirable change"
+af8e253 Not desirable change
+d05e621 Merge branch 'doc/features'
+d2e483f Add: Installation section
+1cb8880 (doc/features) Add: Features section
+98ad8b1 Add: Introduction section
+436b67d First Commit
+```
+
+我們想把最後一個變更刪掉，可以使用 `git reset`:
+
+```shell
+$ git reset 634fee5
+Unstaged changes after reset:
+M       README.md
+```
+
+可以發現 `README.md` 被移出 staged 了。此時我們看 log:
+
+```bash
+$ git log --oneline
+634fee5 (HEAD -> doc/tech-stack, main) Revert "Not desirable change"
+af8e253 Not desirable change
+d05e621 Merge branch 'doc/features'
+d2e483f Add: Installation section
+1cb8880 (doc/features) Add: Features section
+98ad8b1 Add: Introduction section
+436b67d First Commit
+```
+
+可以發現我們不想要的 commit 被刪掉了！
+而我們的更動被挪出暫存區，彷彿什麼都沒發生。

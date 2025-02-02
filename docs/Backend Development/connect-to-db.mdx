@@ -1,0 +1,85 @@
+---
+sidebar_position: 4
+---
+
+# Setup Database & Connection
+
+在我們真的開始寫系統前，我們可以先確立連線是否成功。
+
+## Install MySQL client
+
+這次不是 TablePlus 噢！是給 js 使用的 client：
+
+```shell
+$ pnpm add mysql2
+```
+
+## DB Setup
+
+如果你的設定是跟著助教們提供的指引文件去下載與設定。
+那你應該有一個 `root` 使用者，並且密碼是 `root`。
+
+我們來進入資料庫，請打開終端機：
+
+```shell
+$ mysql -h 127.0.0.1 -P 3306 -u root -p
+```
+
+接著輸入你的密碼，我想可能是 `root`。
+
+然後我們來創建一個資料庫，並且使用它。
+
+```sql
+# CREATE DATABASE dbms-example;
+# USE dbms-example;
+```
+
+然後我們來創建一張 `User` 表：
+
+```sql
+# CREATE TABLE IF NOT EXISTS `User` (
+        Id VARCHAR(20) NOT NULL,
+        Account VARCHAR(50) NOT NULL,
+        Name TEXT NOT NULL,
+        Password TEXT NOT NULL,
+        JoinAt TIMESTAMP NOT NULL DEFAULT NOW(),
+        CONSTRAINT UC_Account UNIQUE(Account),
+        PRIMARY KEY(Id)
+);
+```
+
+好，這樣就創建好我們的資料庫環境了！
+
+## DB Connection
+
+我們在專案的根目錄創建 `lib` 路徑，並在其中新增 `mysql.js` 再編輯：
+
+```javascript
+/* /lib/mysql.js */
+import mysql2 from "mysql2/promise";
+
+const access = {
+  user: "root", // write your username
+  password: "root", // write your password
+  database: "dbms-example", // write your database
+};
+const mysqlConnectionPool = mysql2.createPool(access);
+
+export default mysqlConnectionPool;
+
+(async () => {
+  const mysql = await mysqlConnectionPool.getConnection();
+
+  const result = await mysql.query("SELECT 1+1");
+  console.log(result);
+  process.exit();
+})();
+```
+
+用 `node mysql.js` 跑的結果如果是：
+
+```
+[ [ { '1+1': 2 } ], [ `1+1` BIGINT(3) NOT NULL ] ]
+```
+
+就代表你成功了。接下來把 `(async() ... )()` 刪除，這個部份就完成了。

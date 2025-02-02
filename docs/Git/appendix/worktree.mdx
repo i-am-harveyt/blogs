@@ -1,0 +1,45 @@
+---
+sidebar_position: 2
+---
+
+# Git Worktree
+
+:::tip[Git Worktree]
+Git worktree 可以根據 branch 變出一個 directory。
+只要進入 directory，就相當於切換到 branch 上工作。
+:::
+
+```bash
+$ git switch main && git branch doc/worktree
+Already on 'main'
+
+$ git branch # list the branches
+  doc/worktree
+* main
+
+$ git worktree list # list the worktrees, project root is also one
+/home/ht/Desktop/example  d50908e [main]
+
+$ git worktree add doc-worktree doc/worktree # add doc-worktree directory
+Preparing worktree (checking out 'doc/worktree')
+HEAD is now at d50908e Add: something not expected
+
+$ git worktree list
+/home/ht/Desktop/example               d50908e [main]
+/home/ht/Desktop/example/doc-worktree  d50908e [doc/worktree]
+
+$ cd doc-worktree  # change directory
+
+$ git status  # you can see your're on the doc/worktree branch
+On branch doc/worktree
+nothing to commit, working tree clean
+
+# edit things yourself, git add, git commit
+
+$ cd ..  # goto the parent directory
+
+$ rm -rf doc-worktree && git worktree prune
+
+$ git worktree list
+/home/ht/Desktop/example  d50908e [main]
+```

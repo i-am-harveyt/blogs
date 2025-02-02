@@ -1,0 +1,33 @@
+---
+sidebar_position: 3
+---
+
+# Git Blame
+
+這是一個有趣的功能，可以讓你看到這段（很笨的）程式碼到底是誰寫的。
+~~結果發現是自己~~。
+
+> 剛看到一段很玄的程式 很生氣地找了一下是誰寫的 乾結果是我自己…
+>
+> HHM (2025)
+
+```shell
+$ cat README.md # show the contents of README.md
+# DBMS 113-2 Example
+## Introduction
+## Features
+
+$ git blame README.md # format: <hash> (<user> <timestampz>) <line-number>)
+^35205e1 (HarveyTung 2025-01-22 16:01:18 +0800 1) # DBMS 113-2 Example
+8485ac09 (HarveyTung 2025-01-22 16:04:35 +0800 2) ## Introduction
+2a8954ab (HarveyTung 2025-01-22 16:05:17 +0800 3) ## Features
+
+$ git log --oneline # look at the hash
+2a8954a (HEAD -> main) Add: Feature Section
+8485ac0 Add: Introduction section
+35205e1 First Commit
+
+$ git blame -L 2,3 README.md # specify range with `-L <start>(,<end>)`
+8485ac09 (HarveyTung 2025-01-22 16:04:35 +0800 2) ## Introduction
+2a8954ab (HarveyTung 2025-01-22 16:05:17 +0800 3) ## Features
+```

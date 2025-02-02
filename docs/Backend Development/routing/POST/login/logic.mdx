@@ -1,0 +1,112 @@
+---
+sidebar_position: 2
+---
+
+# Logic
+
+直到 sql 以前的東西都大差不差，我就直接給程式碼了：
+
+```javascript
+/**
+ * Login with `account` and `password` in request body.
+ *
+ * @param {express.Request} req
+ * @param {express.Response} res
+ */
+async function login(req, res) {
+  const { account, password } = req.body;
+  const mysql = await mysqlConnectionPool.getConnection();
+  try {
+  } catch (err) {}
+}
+userRouter.post("/user/login", login);
+```
+
+好，現在來寫 sql 的部份，我們先寫好 sql 指令：
+
+```javascript
+const results = await mysql.query(
+  `
+    SELECT Id, Name, Account from \`User\`
+    WHERE
+    Account = ? AND
+    Password = ?
+    `,
+  [account, password],
+);
+```
+
+`results` 是什麼？我來暴雷一下，結果是：
+
+```javascript
+[
+  [ { Id: 'ta-harvey', Name: 'harvey', Account: 'ta-harvey' } ],
+  [
+    `Id` VARCHAR(20) NOT NULL PRIMARY KEY,
+    `Name` TEXT NOT NULL,
+    `Account` VARCHAR(50) NOT NULL
+  ]
+]
+```
+
+可以看到是一個陣列，第一個 item 是 array of data objects，第二個是 fields。
+我們只需要結果，所以我們可以把 `results` 改為 `[results]`。這就代表只取用陣列的第一項，也就是 array of data objects。
+
+先把程式碼改成這樣：
+
+```javascript
+const [results] = await mysql.query(
+...
+);
+res.status(200).json({results});
+```
+
+接著重新啟動你的 server，這次請求發送的指令碼改成：
+
+```shell
+$ curl -X POST \
+    -H "Content-Type: application/json" \
+    -d '{"account": "ta-harvey", "password": "dbms"}' \
+    http://localhost:3000/user/signup
+```
+
+你應該會看到：
+
+```shell
+{"results":[{"Id":"ta-harvey","Name":"harvey","Account":"ta-harvey"}]}
+```
+
+:::caution
+可以試試看把密碼改成 "DBMS"，你可能會發現一樣可以存取成功。
+這邊留給讀者一個小功課，這該如何處理呢？
+:::
+
+好，現在我們已經能把資料拉出來了，但有沒有該特別處理的問題呢？
+
+1. 資料庫操作本身可能出錯（如 signup 的部份）
+2. 如果查無此人？
+
+:::tip[Practice]
+第一點好說，一樣 `try...catch...` 處理一下就行。
+可以想一下該怎麽做？
+:::
+
+我們來針對第二點展開：怎麼樣叫查無此人？==其實就是抓回來的資料是 0 筆吧！==
+
+因為我們的 `results` 是 array of data objects，那就很直覺了：就是當 `results` 長度是 0 的時候。所以可以加上：
+
+```javascript
+const [results] = await mysql.query(...);
+if (results.length === 0)
+    throw new Error("Wrong account or password");
+```
+
+我這邊的寫法就簡單粗糙一點，大家如果有更複雜的設計歡迎自己寫上。
+
+好，再來我們要把使用者資訊回傳，我們要回傳 `id` 跟 `token` 兩個欄位：
+
+```javascript
+res.status(200).json({ id: results[0]["Id"], token: "" });
+```
+
+這樣就搞定了。至於 token ，我接下來再說吧！

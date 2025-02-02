@@ -1,0 +1,80 @@
+---
+sidebar_position: 2
+---
+
+# Getting Started
+
+## Init a Project
+
+初始化一個專案，你需要用：
+
+```shell
+$ pnpm init && git init
+```
+
+你可以在路徑下找到 `package.json` 檔案。
+
+接著用你最喜歡的編輯器打開 `package.json`，
+在 description 下方添加一行字如下：
+
+```json
+{
+    ...,
+    "description": "",
+    "type": "module",
+    ...,
+}
+```
+
+這可以啟動現在主流的 [ES Module](https://www.w3schools.com/js/js_es6.asp) 。
+這比較難解釋，我們先不討論。有興趣的可以去研究一下。
+
+接著新增 `.gitignore` 檔案，在裡面新增以下內容：
+
+```
+# ignore the js node_modules
+node_modules
+```
+
+## Install ExpreesJS
+
+使用指令
+
+```shell
+$ pnpm add express
+```
+
+就可以開始安裝。
+
+## Create the Server
+
+:::note[為什麼範例會跟官方文檔不一樣]
+ExpressJS 寫成的時空背景是以 CommonJS (CJS) 為主流的時期。
+因為歷史悠久且非常廣泛使用，因此它們不適合大改成 ES Module。
+由於我們採用 ES Module，因此有些操作會跟官方文件的做法不一樣。
+但大多都是在引入 package 的部分，其他的就都差不多了。
+:::
+
+在專案目錄新增檔案 `app.js`。
+
+馬上就出現跟官方文檔很不一樣的內容了。我們引入 `express`:
+
+```javascript
+import express from "express";
+```
+
+這個東西應該連你的編輯器都不會提示你。
+我也是上網查來的。其他的東西就可以跟官方文檔對照了。
+
+我們先初始化一個 express app：
+
+```javascript
+const app = express();
+
+app.listen(3_000, () => {
+  console.log(`Listening port ${3_000}`);
+});
+```
+
+`app.listen` 函數是把 server 啟動，並開始監聽是否有請求傳來。我將 port 設定為 3,000。
+接下來只要有請求傳到你電腦上的 3,000 port，就會被 express js 的 server 處理。

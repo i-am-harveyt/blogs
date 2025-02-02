@@ -1,0 +1,64 @@
+---
+sidebar_position: 2
+---
+
+# Revert a Commit
+
+我們先造一個不想要的 commit。
+來在我們的 `README.md` 底下新增一行 "Not desirable change"：
+
+```bash
+$ echo "Not desirable change" >> README.md && git add README.md && git commit -m "Not desirable change"
+```
+
+來看一下 log:
+
+```bash
+$ git log --oneline
+af8e253 (HEAD -> main) Not desirable change
+d05e621 Merge branch 'doc/features'
+d2e483f Add: Installation section
+1cb8880 (doc/features) Add: Features section
+98ad8b1 Add: Introduction section
+436b67d First Commit
+```
+
+我們先來 revert 一下。我們今天想要消除掉 `af8e253` 的編輯對吧？那我們來針對他 revert:
+
+```bash
+$ git revert af8e253
+```
+
+這時會彈出終端機編輯器，一樣退出就好。會出現：
+
+```bash
+$ git revert af8e253
+[main 634fee5] Revert "Not desirable change"
+ 1 file changed, 1 deletion(-)
+```
+
+這時我們看 log:
+
+```bash
+$ git log --oneline
+634fee5 (HEAD -> main) Revert "Not desirable change"
+af8e253 Not desirable change
+d05e621 Merge branch 'doc/features'
+d2e483f Add: Installation section
+1cb8880 (doc/features) Add: Features section
+98ad8b1 Add: Introduction section
+436b67d First Commit
+```
+
+多出了一個有關 revert 的 commit。
+
+此時我們檢查 `README.md`:
+
+```
+# DBMS TA Session Git Example
+## Introduction
+## Installation
+## Features
+```
+
+"Not desirable change" 確實不見了！

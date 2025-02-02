@@ -1,0 +1,70 @@
+---
+sidebar_position: 3
+---
+
+# Your First API
+
+先別急著啟動。我們先寫好我們的第一支 API，等等才會有東西互動對吧。
+在兩段程式碼的中間插入以下程式碼：
+
+```javascript
+app.get("/ping", (req, res) => {
+  res.json({ message: "pong" });
+});
+```
+
+大部分的後端框架都會有類似的處理方式，即 app(router) 的函數即是 HTTP method。
+
+所以說這段程式碼應該會變得很好解讀：對 `<url>/ping` 發出一個 `GET` 方法的請求，會被處理。
+
+:::note
+`<url>` 是哪個？
+在自己電腦跑起來並呼叫自己電腦上的 server，預設是 `http://localhost:3000`。
+:::
+
+後面的 callback function 就是你用來針對近來的請求處理的函式，我們一般會稱他為 handler。
+Express 的 handler 比較完整的寫法類似下面這樣：
+
+```javascript!
+(req, res, next) => {}
+```
+
+分別有三個參數：
+
+- `req`: 可以透過這個參數操作 request
+- `res`: 可以透過這個參數操作 response
+- `next`: 除非這個 handler 之後還有其他 handler ，不然一般會省略
+
+接下來我們來認真的看這個 handler：
+
+```javascript
+(req, res) => {
+  res.json({ message: "pong" });
+};
+```
+
+可以看到他呼叫了 `res` 的 `json` 方法，該函式的描述為：
+
+> Send JSON response.
+
+可見呼叫他會回傳一個 `{ message: "pong" }` 的回應。
+
+## Start the Server & Call API
+
+請在終端機輸入：
+
+```shell
+$ node index.js
+Listening port 3000
+```
+
+可以看到 `app_.listen` 的 callback function 有被成功呼叫，說明他已經成功啟動了。
+
+接著再開一個終端機，對 `http://localhost:3000/ping` 發送一個請求：
+
+```shell
+$ curl -X GET http://localhost:3000/ping
+{"message":"pong"}
+```
+
+成功獲得回覆，恭喜你寫出了第一支 API。

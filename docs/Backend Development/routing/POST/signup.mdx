@@ -1,0 +1,169 @@
+---
+sidebar_position: 2
+---
+
+# Signup
+
+如果在前面章節有順利吸收，應該知道我們要來做什麼。
+
+在 `app.js` 中 `app.listen` 前加入以下內容
+
+```javascript
+...
+app.post("/user/signup", signup);
+app.listen(3000, () => ...);
+```
+
+如果有在留意第一支 API，應該可以看到這邊我沒有繼續使用 arrow function。
+這是我的個人習慣：我習慣把 callback 拿出來獨立寫。
+
+所以我們在 `app` 的宣告前加入 function:
+
+```javascript
+function signup(req, res) {}
+...
+const app = express();
+...
+```
+
+可以看到這邊我們一樣把 `req` 跟 `res` 帶過來。
+不過這時你用 cursor hover 一下可以看到編輯器不認識他們的型別，所以我們加上 JSDoc:
+
+```javascript
+/**
+ * Signup with `id`, `name`, `account` and `password` in request body.
+ *
+ * @param {express.Request} req
+ * @param {express.Response} res
+ */
+function signup(req, res) {}
+```
+
+這下編輯器就可以看懂我們 parameters 的型別了。
+
+請注意：
+
+:::caution
+我們的 server 應該要是一個 non-blocking 的架構。
+這樣才不會因為有的查詢特別久而阻擋了其他人的請求。
+:::
+
+處理的方法也很簡單，在 `function` 前面加上 `async` 就好了：
+
+```javascript
+...
+async function signup(req, res) {}
+```
+
+接下來有兩件事情希望讀者特別留意：
+
+:::important
+本部份有兩個會對以後的吸收有重要影響的要點：
+
+1. 從 request 中取出資料
+2. mysql client 的操作
+
+其實都不難，只要有點印象別以後看不懂就好。
+:::
+
+好，首先我們先把資歷取出：
+
+- `id`
+- `name`
+- `account`
+- `password`
+
+```javascript
+async function signup(req, res) {
+  const id = req.body["id"];
+  const name = req.body["name"];
+  const account = req.body["account"];
+  const password = req.body["password"];
+  // or, alternatively
+  const { id, name, account, password } = req.body;
+  // getting data of field having same name with variables
+}
+```
+
+這邊岔開話題說一下，我蠻喜歡用 `const` 的，尤其是在學了點 Rust 之後。
+感受到用 `const` 可以讓你很確定這個變數的型別與值該是什麼。
+
+我先跳過變數檢查的部份。我們來對資料庫做存取。
+
+先從 pool 中取得一個連線，再對它輸入指令：
+
+```javascript
+const mysql = await mysqlConnectionPool.getConnection();
+await mysql.query(
+  `
+    INSERT INTO \`User\` (Id, Name, Account, Password)
+    VALUES (?, ?, ?, ?)`,
+  [id, name, account, password],
+);
+```
+
+取得連線的部份只有一條應該不難懂，來針對發指令的部份拆解一下：
+
+1. `` 是 literal ，跟 string 差不多，不過可以換行，也可以做值的 inject
+2. 為什麼 literal 裡面要用跳脫字元，應該就好理解了
+3. `?` 是佔位符，意味著我們的傳入值最後會被依序值入並取代
+4. 最後面的 array 就是傳入值用的資料結構
+
+先別急著執行，我們設想一下：_新增資料是有可能出錯的吧？_ 譬如 id 重複什麼的。
+所以我們來加入一個 `try...catch`，如果出錯就回覆錯誤訊息：
+
+```javascript
+try {
+  await mysql.query(
+    `
+        INSERT INTO \`User\` (Id, Name, Account, Password)
+        VALUES (?, ?, ?, ?)`,
+    [id, name, account, password],
+  );
+  // return succcessfully created
+  res.status(201).json({ status: "created" });
+} catch (err) {
+  // return error
+  res.status(400).json({ error: "User account has been used!" });
+}
+```
+
+這時候我們我們可以把伺服器跑起來了，開啟你的終端機：
+
+```shell
+$ pnpm run dev # run this in your project root
+
+> dbms-example@1.0.0 dev /home/ht/Desktop/DBMS/dbms-example
+> node app.js
+```
+
+並且我們來呼叫一下這支 api，開啟另一個終端機：
+
+```shell
+$ curl -X POST \
+    -H "Content-Type: application/json" \
+    -d '{"id": "ta-harvey", "account": "ta-harvey", "name": "harvey", "password": "dbms"}' \
+    http://localhost:3000/user/signup
+{"status":"ok"}
+```
+
+看起來是成功了，那我們試一下重複會怎麽樣
+
+```shell
+$ curl -X POST \
+    -H "Content-Type: application/json" \
+    -d '{"id": "ta-harvey", "account": "ta-harvey", "name": "harvey", "password": "dbms"}' \
+    http://localhost:3000/user/signup
+{"error":"User account has been used!"}
+```
+
+錯誤發送有被觸發，顯然是合理的。
+
+這樣一來，我們的 POST API 就先告一段落。
+
+細心的讀者應該已經發現有些東西我沒有處理：
+
+1. 沒有檢查輸入值
+2. 密碼沒有 hash 過
+
+這些未竟之業就交給讀者處理啦～希望你們可以藉此有所學習。

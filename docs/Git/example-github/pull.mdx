@@ -1,0 +1,37 @@
+---
+sidebar_position: 6
+---
+
+# Update Local Repo
+
+現在回到 local repo。按照以下示範輸入指令：
+
+```shell
+$ git switch main
+Switched to branch 'main'
+Your branch is up to date with 'origin/main'.
+
+$ git pull
+remote: Enumerating objects: 1, done.
+remote: Counting objects: 100% (1/1), done.
+remote: Total 1 (delta 0), reused 0 (delta 0), pack-reused 0 (from 0)
+Unpacking objects: 100% (1/1), 905 bytes | 905.00 KiB/s, done.
+From github.com:i-am-harveyt/113-2-dbms
+   0c3c0f5..faa0d91  main       -> origin/main
+Updating 0c3c0f5..faa0d91
+Fast-forward
+ .gitignore | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 .gitignore
+```
+
+這樣就代表有順利的把遠端的 `main` branch pull 下來了。
+可以看到 `.gitignore` 的更新。
+
+來看一下成果：
+
+```bash
+$ cat .gitignore
+.DS_Store
+
+```

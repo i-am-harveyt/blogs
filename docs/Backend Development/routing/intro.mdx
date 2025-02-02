@@ -1,0 +1,18 @@
+---
+sidebar_position: 1
+---
+
+# Introduction
+
+我們現在有第一支 API 了，也有資料庫的連線。
+不過既然我們依循的是 RESTful API 的設計，就說明我們不會只有這一支。
+
+本教材的範例將會包含 USER 的 CRUD，也就是以下幾支 API
+
+- `GET` `/user/:id`
+- `POST` `/user/signup`, `/user/signin`
+- `PUT` `/user`
+- `DELETE` `/user`
+
+雖然按照清單的順序來說，我們應該要先講 `GET` 。
+但沒有 user 怎麼抓取資料？我們還是先從 `POST` 開始吧。

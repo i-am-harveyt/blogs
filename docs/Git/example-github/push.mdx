@@ -1,0 +1,42 @@
+---
+sidebar_position: 3
+---
+
+# Push Local Repo to Remote
+
+![image](https://hackmd.io/_uploads/SJuL42oDJl.png)
+
+在此頁面上有兩個 code block。如果 local 沒有 git repo，那用上面的挺合理的。
+但因為我們已經有 repo 了，所以我們來看下面的那一個：
+
+```shell
+$ git remote add origin git@github.com:i-am-harveyt/113-2-dbms.git
+
+$ git branch -M main
+
+$ git push -u origin main
+Enumerating objects: 3, done.
+Counting objects: 100% (3/3), done.
+Writing objects: 100% (3/3), 246 bytes | 246.00 KiB/s, done.
+Total 3 (delta 0), reused 0 (delta 0), pack-reused 0
+To github.com:i-am-harveyt/113-2-dbms.git
+ * [new branch]      main -> main
+branch 'main' set up to track 'origin/main'.
+```
+
+有經驗或者比較能看 doc 的可以直接 `git help git-remote`，以下是我的簡化版解釋：
+
+- `git remote add <name> <URL>` 將 remote repo 加入自己追蹤的遠端 repo 集合中
+  - 以前 Github 支援 https & ssh，但**現在只支援 ssh**
+  - 設定詳見[Adding a new SSH key to your GitHub account](https://docs.github.com/en/enterprise-cloud@latest/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account?platform=mac)
+- `git branch -M main` 把 branch 命名為 `main`，這應該提過了。
+- `git push -u origin main` 細說
+  - `git push` 是把紀錄往遠端推送
+  - `-u` 是 `--set-upstream` 的縮寫，設定遠端追蹤的 reference
+  - `origin main`
+    - `origin` 是遠端 repo 的名稱（見上一條指令設定）
+    - `main` 是 origin 的 branch 名稱
+
+執行完畢就可以看到你已經把紀錄推到 Github 上，如下圖：
+
+![image](https://hackmd.io/_uploads/ryhRdCsvye.png)

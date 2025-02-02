@@ -1,0 +1,73 @@
+---
+sidebar_position: 4
+---
+
+# Create a Pull Request
+
+:::tip
+通常在協作中，我們不會直接把變更往 `develop` 或 `main` 推送。
+因為上述的兩個 branch 基本代表這些程式碼準備測試或 production-ready。
+:::
+
+而是會推到遠端 branch ，然後開 Pull Request(PR)，待 code review 完（並修改完） merge 到 `develop` 等 branch。
+
+> 我猜有人心中有疑問如當時的我：為什麼 merge 的請求叫做 pull request？
+>
+> 老實說我還不知道為什麼。但我知道 Gitlab 的這個東西叫做 Merge Request。
+
+我們先在 local 端創建一個 branch 並做一些更動。
+
+```shell
+$ git branch misc/gitignore && git switch misc/gitignore
+$ echo '.DS_Store' >> .gitignore
+$ git add .gitignore
+$ git commit -m "Add: .gitignore file"
+[misc/gitignore a77fa62] Add: gitignore
+ 1 file changed, 1 insertion(+)
+ create mode 100644 .gitignore
+```
+
+我們創建 `misc/gitignore` branch，並切換到那上面。
+
+接著我們往 `.gitignore` 檔案裡面添加了一行 `.DS_Store`。
+
+:::note[`.gitignore` & `.DS_Store`]
+
+- `.gitignore` 是指示 git 應該要 ignore（or ignore the ignored）的檔案。
+- `.DS_Store` 是 MacOS 裡標記資料夾 custom setting 的檔案。一般來說不是專案的一部分，所以不用 track
+  :::
+
+接下來兩行都是老朋友了，不解釋了。
+
+我們現在來把它推送到遠端的 `misc/gitignore` branch:
+
+```shell
+$ git push origin misc/gitignore
+Enumerating objects: 4, done.
+Counting objects: 100% (4/4), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (2/2), done.
+Writing objects: 100% (3/3), 296 bytes | 296.00 KiB/s, done.
+Total 3 (delta 0), reused 0 (delta 0), pack-reused 0
+remote:
+remote: Create a pull request for 'misc/gitignore' on GitHub by visiting:
+remote:      https://github.com/i-am-harveyt/113-2-dbms/pull/new/misc/gitignore
+remote:
+To github.com:i-am-harveyt/113-2-dbms.git
+ * [new branch]      misc/gitignore -> misc/gitignore
+```
+
+這段結果說明 local branch 已經推送到 remote branch 上面了。遠端本沒有 `misc/gitignore` branch，所以會創建一個。
+
+接著打開結果中的那段網址，可以進入到創建 PR 的界面：
+
+![image](https://hackmd.io/_uploads/SJafeJnDkg.png)
+
+這個畫面上有許多東西，我講幾個我想提醒的地方。剩下的有的看就能懂，有的可以自己點看看。
+
+- 頂端有兩個下拉選單，請注意自己要 merge 的跟要被 merge 的分別是誰。
+- 現在的 title 是 `Add: gitignore` 可以視情況更改
+- description 通常 team 裡有模板，我這邊照我想打的打
+- 左邊可以設定 reviewer。設定完後，未經那個人的批准是不能 merge 的
+
+接著按 `Create pull request` 按鈕就完成了。
