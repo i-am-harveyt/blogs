@@ -3,6 +3,10 @@ title: Intro
 sidebar_position: 1
 ---
 
+:::info
+These blogs are originally written for TA session materials, so there's a TA session info section.
+:::
+
 # TA Session Intro
 
 I believe many of you are confused about the requirement of building a project in this course.
