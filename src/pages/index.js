@@ -17,9 +17,9 @@ function HomepageHeader() {
         <div className={styles.buttons}>
           <Link
             className="button button--secondary button--lg"
-            href="https://google.com"
+            href="https://github.com/i-am-harveyt"
           >
-            Moodle
+            My Github
           </Link>
         </div>
       </div>
@@ -35,9 +35,7 @@ export default function Home() {
       description="Description will go into a meta tag in <head />"
     >
       <HomepageHeader />
-      <main>
-        <p>Put Syllabus Here</p>
-      </main>
+      <main></main>
     </Layout>
   );
 }

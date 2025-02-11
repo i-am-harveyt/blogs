@@ -10,8 +10,8 @@ import { themes as prismThemes } from "prism-react-renderer";
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: "Database Management Systems",
-  tagline: "DBMS 113-2",
+  title: "Harvey's Blog",
+  tagline: "Let's write code!",
   favicon: "img/favicon.ico",
 
   // Set the production url of your site here
@@ -23,7 +23,7 @@ const config = {
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: "i-am-harveyt", // Usually your GitHub org/user name.
-  projectName: "113-2", // Usually your repo name.
+  projectName: "blogs", // Usually your repo name.
   trailingSlash: false,
 
   onBrokenLinks: "throw",
@@ -85,7 +85,7 @@ const config = {
       // Replace with your project's social card
       image: "img/docusaurus-social-card.jpg",
       navbar: {
-        title: "DBMS 113-2",
+        title: "Harvey's Blog",
         logo: {
           alt: "My Site Logo",
           src: "img/logo.svg",
@@ -95,7 +95,7 @@ const config = {
             type: "docSidebar",
             sidebarId: "tutorialSidebar",
             position: "left",
-            label: "TA Session Tutorials",
+            label: "Tutorials",
           },
           {
             type: "localeDropdown",
