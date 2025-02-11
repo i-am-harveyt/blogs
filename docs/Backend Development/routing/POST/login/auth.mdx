@@ -12,4 +12,44 @@ sidebar_position: 3
 :::note
 大家可以去查查 JWT 跟 Bearer Token。
 都是網頁開發的有用東西。
+我這邊先跳過說明，直接進程式碼。
 :::
+
+我們要下載 [jose](https://github.com/panva/jose) 包，請在你的終端機中輸入：
+
+```shell
+$ pnpm add jose
+```
+
+接下來在檔案的頂端引入 `jose`:
+
+```javascript
+import * as jose from "jose";
+...
+```
+
+我們可以來 sign 一個 JWT 了，我上程式碼，再解釋它再做什麼：
+
+```javascript
+const token = await new jose.SignJWT({ id: results[0]["UserId"] })
+  .setProtectedHeader({ alg: "HS256" })
+  .setExpirationTime("2h")
+  .sign(new TextEncoder().encode("secret"));
+```
+
+- `jose.SignJWT` 是一個異步回傳 JWT 物件的函數，所以要用 `await`
+  - 他的參數是他要簽署的資料的內容
+  - 我們想傳送包含 id 資料的物件，所以用 `{ id:... }`
+- `setProtectedHeader` 可以設定一些東西，如這裡我們把演算法設定為 HS256
+- `setExpirationTime` 顧名思義就是設定期限，過期了就要發新 token
+- `sign` 就是簽署的部份，裡面的參數是密鑰，所以記得藏好。我這邊為了示範就不藏了。
+
+最後，把回傳的 token 從 `""` 改成 `token` 就可以囉！你的回傳資料就會變成像這樣：
+
+```
+{"id":1,"token":"eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZXhwIjoxNzM5Mjg4NTc3fQ.3atOvmwQBx0kVzedbjzBazSva9jxsyeLgqDVJ4iFK6U"}
+```
+
+從此以後前端把這個 token 丟回來，只要再通過驗證就好，還可以取出這個 Id。
+
+具體的作法請查[doc](https://github.com/panva/jose/blob/HEAD/docs/jwt/verify/functions/jwtVerify.md)。
