@@ -54,7 +54,7 @@ const config = {
       ({
         docs: {
           sidebarPath: "./sidebars.js",
-          editUrl: "https://github.com/i-am-harveyt/dbms113-2/",
+          editUrl: "https://github.com/i-am-harveyt/blogs/",
         },
         // blog: {
         //   showReadingTime: true,
