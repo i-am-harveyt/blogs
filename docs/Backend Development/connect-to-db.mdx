@@ -37,14 +37,14 @@ $ mysql -h 127.0.0.1 -P 3306 -u root -p
 然後我們來創建一張 `User` 表：
 
 ```sql
-# CREATE TABLE IF NOT EXISTS `User` (
-        Id VARCHAR(20) NOT NULL,
-        Account VARCHAR(50) NOT NULL,
-        Name TEXT NOT NULL,
-        Password TEXT NOT NULL,
-        JoinAt TIMESTAMP NOT NULL DEFAULT NOW(),
-        CONSTRAINT UC_Account UNIQUE(Account),
-        PRIMARY KEY(Id)
+CREATE TABLE IF NOT EXISTS `User` (
+	UserId INT AUTO_INCREMENT,
+	Email VARCHAR(255) NOT NULL,
+	Name VARCHAR(255) NOT NULL,
+	Password VARCHAR(255) NOT NULL,
+	JoinDate TIMESTAMP NOT NULL DEFAULT NOW(),
+	CONSTRAINT UC_Email UNIQUE(Email),
+	PRIMARY KEY(UserId)
 );
 ```
 
