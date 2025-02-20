@@ -80,11 +80,23 @@ async function signup(req, res) {
   // or, alternatively
   const { name, email, password } = req.body;
   // getting data of field having same name with variables
+  console.log(name, email, password);
 }
 ```
 
 這邊岔開話題說一下，我蠻喜歡用 `const` 的，尤其是在學了點 Rust 之後。
 感受到用 `const` 可以讓你很確定這個變數的型別與值該是什麼。
+
+如果大家這時候想印出這三個值檢查，應該會是 `undefined`。
+因為 express 不會預設要把你的 `req.body` 解析成任何格式，而我們希望他是個 `json`。
+
+並且在 `app.js` 裡面像以下這樣加入內容：
+
+```javascript
+const app = express();
+app.use(express.json());
+...
+```
 
 我先跳過變數檢查的部份。我們來對資料庫做存取。
 
@@ -124,6 +136,14 @@ try {
   // return error
   res.status(400).json({ error: "User account has been used!" });
 }
+```
+
+同時，大家可以檢查一下 `mysqlConnectionPool`，他好像還沒被定義對吧？
+那是因為我們的 `app.js` 並沒有將它從 `lib/mysql.js` 引用過來。我們來引用它：
+
+```javascript
+import express from "express";
+import mysqlConnectionPool from "./lib/mysql.js";
 ```
 
 這時候我們我們可以把伺服器跑起來了，開啟你的終端機：

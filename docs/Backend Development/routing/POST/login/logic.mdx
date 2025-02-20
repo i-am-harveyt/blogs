@@ -19,7 +19,7 @@ async function login(req, res) {
   try {
   } catch (err) {}
 }
-userRouter.post("/user/login", login);
+app.post("/user/login", login);
 ```
 
 好，現在來寫 sql 的部份，我們先寫好 sql 指令：
@@ -29,9 +29,9 @@ const [results] = await mysql.query(
   `
 		SELECT UserId, Name, Email FROM \`User\`
 		WHERE
-		Email=CONVERT(? USING utf8mb4) AND
-		Password=CONVERT(? USING utf8mb4)
-		COLLATE utf8mb4_bin`,
+		Email=? AND
+		Password=?
+		`,
   [email, password],
 );
 ```
@@ -42,7 +42,7 @@ const [results] = await mysql.query(
 [
   [ { UserId: 1, Name: 'harvey', Email: 'ta.harvey@nccu.edu.tw' } ],
   [
-    `Id` INT NOT NULL PRIMARY KEY,
+    `UserId` INT NOT NULL PRIMARY KEY,
     `Name` VARCHAR(255) NOT NULL,
     `Email` VARCHAR(255) NOT NULL
   ]
@@ -66,8 +66,8 @@ res.status(200).json({results});
 ```shell
 $ curl -X POST \
     -H "Content-Type: application/json" \
-    -d '{"email": "ta-harvey", "password": "dbms"}' \
-    http://localhost:3000/user/signup
+    -d '{"email": "ta.harvey@nccu.edu.tw", "password": "dbms"}' \
+    http://localhost:3000/user/login
 ```
 
 你應該會看到：
