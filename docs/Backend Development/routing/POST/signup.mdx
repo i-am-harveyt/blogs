@@ -31,7 +31,7 @@ const app = express();
 
 ```javascript
 /**
- * Signup with `id`, `name`, `account` and `password` in request body.
+ * Signup with `name`, `email` and `password` in request body.
  *
  * @param {express.Request} req
  * @param {express.Response} res
@@ -68,9 +68,8 @@ async function signup(req, res) {}
 
 好，首先我們先把資歷取出：
 
-- `id`
 - `name`
-- `account`
+- `email`
 - `password`
 
 ```javascript
@@ -97,7 +96,7 @@ await mysql.query(
   `
     INSERT INTO User (Name, Email, Password)
     VALUES (?, ?, ?)`,
-  [id, name, account, password],
+  [name, email, password],
 );
 ```
 
@@ -117,7 +116,7 @@ try {
     `
       INSERT INTO User (Name, Email, Password)
       VALUES (?, ?, ?)`,
-    [id, name, account, password],
+    [name, email, password],
   );
   // return succcessfully created
   res.status(201).json({ status: "created" });
