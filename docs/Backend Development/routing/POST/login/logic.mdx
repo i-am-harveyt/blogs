@@ -14,7 +14,7 @@ sidebar_position: 2
  * @param {express.Response} res
  */
 async function login(req, res) {
-  const { account, password } = req.body;
+  const { email, password } = req.body;
   const mysql = await mysqlConnectionPool.getConnection();
   try {
   } catch (err) {}
@@ -25,14 +25,14 @@ userRouter.post("/user/login", login);
 好，現在來寫 sql 的部份，我們先寫好 sql 指令：
 
 ```javascript
-const results = await mysql.query(
+const [results] = await mysql.query(
   `
-    SELECT Id, Name, Account from \`User\`
-    WHERE
-    Account = ? AND
-    Password = ?
-    `,
-  [account, password],
+		SELECT UserId, Name, Email FROM \`User\`
+		WHERE
+		Email=CONVERT(? USING utf8mb4) AND
+		Password=CONVERT(? USING utf8mb4)
+		COLLATE utf8mb4_bin`,
+  [email, password],
 );
 ```
 
@@ -40,11 +40,11 @@ const results = await mysql.query(
 
 ```javascript
 [
-  [ { Id: 'ta-harvey', Name: 'harvey', Account: 'ta-harvey' } ],
+  [ { UserId: 1, Name: 'harvey', Email: 'ta.harvey@nccu.edu.tw' } ],
   [
-    `Id` VARCHAR(20) NOT NULL PRIMARY KEY,
-    `Name` TEXT NOT NULL,
-    `Account` VARCHAR(50) NOT NULL
+    `Id` INT NOT NULL PRIMARY KEY,
+    `Name` VARCHAR(255) NOT NULL,
+    `Email` VARCHAR(255) NOT NULL
   ]
 ]
 ```
@@ -66,14 +66,14 @@ res.status(200).json({results});
 ```shell
 $ curl -X POST \
     -H "Content-Type: application/json" \
-    -d '{"account": "ta-harvey", "password": "dbms"}' \
+    -d '{"email": "ta-harvey", "password": "dbms"}' \
     http://localhost:3000/user/signup
 ```
 
 你應該會看到：
 
 ```
-{"results":[{"Id":"ta-harvey","Name":"harvey","Account":"ta-harvey"}]}
+{"results":[{"UserId": 1,"Name":"harvey","Email":"ta.harvey@nccu.edu.tw"}]}
 ```
 
 :::caution
@@ -106,7 +106,7 @@ if (results.length === 0)
 好，再來我們要把使用者資訊回傳，我們要回傳 `id` 跟 `token` 兩個欄位：
 
 ```javascript
-res.status(200).json({ id: results[0]["Id"], token: "" });
+res.status(200).json({ id: results[0]["UserId"], token: "" });
 ```
 
 這樣就搞定了。至於 token ，我接下來再說吧！

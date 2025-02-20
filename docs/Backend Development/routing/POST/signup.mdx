@@ -75,12 +75,11 @@ async function signup(req, res) {}
 
 ```javascript
 async function signup(req, res) {
-  const id = req.body["id"];
   const name = req.body["name"];
-  const account = req.body["account"];
+  const email = req.body["email"];
   const password = req.body["password"];
   // or, alternatively
-  const { id, name, account, password } = req.body;
+  const { name, email, password } = req.body;
   // getting data of field having same name with variables
 }
 ```
@@ -96,8 +95,8 @@ async function signup(req, res) {
 const mysql = await mysqlConnectionPool.getConnection();
 await mysql.query(
   `
-    INSERT INTO \`User\` (Id, Name, Account, Password)
-    VALUES (?, ?, ?, ?)`,
+    INSERT INTO User (Name, Email, Password)
+    VALUES (?, ?, ?)`,
   [id, name, account, password],
 );
 ```
@@ -116,8 +115,8 @@ await mysql.query(
 try {
   await mysql.query(
     `
-        INSERT INTO \`User\` (Id, Name, Account, Password)
-        VALUES (?, ?, ?, ?)`,
+      INSERT INTO User (Name, Email, Password)
+      VALUES (?, ?, ?)`,
     [id, name, account, password],
   );
   // return succcessfully created
@@ -142,7 +141,7 @@ $ pnpm run dev # run this in your project root
 ```shell
 $ curl -X POST \
     -H "Content-Type: application/json" \
-    -d '{"id": "ta-harvey", "account": "ta-harvey", "name": "harvey", "password": "dbms"}' \
+    -d '{"email": "ta.harvey@nccu.edu.tw", "name": "harvey", "password": "dbms"}' \
     http://localhost:3000/user/signup
 {"status":"ok"}
 ```
@@ -152,7 +151,7 @@ $ curl -X POST \
 ```shell
 $ curl -X POST \
     -H "Content-Type: application/json" \
-    -d '{"id": "ta-harvey", "account": "ta-harvey", "name": "harvey", "password": "dbms"}' \
+    -d '{"email": "ta.harvey@nccu.edu.tw", "name": "harvey", "password": "dbms"}' \
     http://localhost:3000/user/signup
 {"error":"User account has been used!"}
 ```
