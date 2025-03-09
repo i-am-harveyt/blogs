@@ -2,7 +2,7 @@
 sidebar_position: 3
 ---
 
-# Authentication
+# Authorization
 
 你有沒有好奇過為什麼登入後網站就知道你是誰？
 它們是怎麽確定使用者是誰的？
@@ -53,3 +53,19 @@ const token = await new jose.SignJWT({ id: results[0]["UserId"] })
 從此以後前端把這個 token 丟回來，只要再通過驗證就好，還可以取出這個 Id。
 
 具體的作法請查[doc](https://github.com/panva/jose/blob/HEAD/docs/jwt/verify/functions/jwtVerify.md)。
+
+:::info[Troubleshooting: `crypto is not defined` Error]
+如果你用的是 Node18，可能會在這個環節出問題。
+
+因為 Node18 還沒正式把 `crypto` 加入 global variable，所以 `jose` 直接取用他的行為會報錯。
+
+這邊提供一個解決方法：
+
+1. 打開 `package.json`
+2. 在 `scripts.dev` 中加入 `--experimental-global-webcrypto` 參數如下方 code block 所示。
+3. 重開，應該就可以了。
+
+```json
+"dev": "node --experimental-global-webcrypt app.js"
+```
+:::
