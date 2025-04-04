@@ -35,11 +35,11 @@ JS 中註解大致分兩種 —— _單行註解_ 跟 _多行註解_：
 // yet another line here
 
 /*
-Multi-line comment:
-We can write
-a lot of
-lines here
-*/
+ * Multi-line comment:
+ * We can write
+ * a lot of
+ * lines here
+ */
 ```
 
 其實我們過去的範例已經默默的偷渡單行註解了，有發現嗎？

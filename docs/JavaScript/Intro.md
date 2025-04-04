@@ -19,13 +19,11 @@ TypeScript(TS) 是 JS 的擴展，我們這邊先不展開討論了。
 - 函數是*一等公民(first-class)*，也就是函數也可以當成變數操作。
 
 :::info
-這份教材的目標受眾是想初探 JavaScript 的人，並且過去有學過 Java 語言的人可以感受到兩者撰寫上的差異。
+這份教材的目標受眾是想初探 JavaScript 的人。
 
 由於是以感受寫 code 樂趣為首要目標，所以前半部分都不會有艱深概念的介紹。
 
 如果已經對程式語言有深厚基礎，我感覺可以去看看 [MDN Doc](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 :::
-
-筆者在 Java 的經驗不算多，程式碼上將儘量靠手寫並且輔以 AI 工具調整。
 
 祝學習順利。
