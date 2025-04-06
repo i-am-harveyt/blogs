@@ -63,7 +63,7 @@ $ node main.js
 Hello World
 Hello World
 Hi There
-/tmp/tmp.js:10
+/tmp/main.js:10
 greetingConst = "Hi There"; // This line can cause an Error!
               ^
 
