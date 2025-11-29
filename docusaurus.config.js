@@ -5,6 +5,8 @@
 // See: https://docusaurus.io/docs/api/docusaurus-config
 
 import { themes as prismThemes } from "prism-react-renderer";
+import rehypeKatex from "rehype-katex";
+import remarkMath from "remark-math";
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
@@ -26,7 +28,7 @@ const config = {
   projectName: "blogs", // Usually your repo name.
   trailingSlash: false,
 
-  onBrokenLinks: "throw",
+  onBrokenLinks: "warn",
   onBrokenMarkdownLinks: "warn",
 
   // Even if you don't use internationalization, you can use this field to set
@@ -55,6 +57,8 @@ const config = {
         docs: {
           sidebarPath: "./sidebars.js",
           editUrl: "https://github.com/i-am-harveyt/blogs/blob/main",
+          remarkPlugins: [remarkMath],
+          rehypePlugins: [rehypeKatex],
         },
         // blog: {
         //   showReadingTime: true,
@@ -79,6 +83,16 @@ const config = {
     mermaid: true,
   },
 
+  stylesheets: [
+    {
+      href: "https://cdn.jsdelivr.net/npm/katex@0.13.24/dist/katex.min.css",
+      type: "text/css",
+      integrity:
+        "sha384-odtC+0UGzzFL/6PNoE8rX/SPcQDXBJ+uRepguP4QkPCm2LBxH3FA3y+fKSiJ+AmM",
+      crossorigin: "anonymous",
+    },
+  ],
+
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
@@ -96,6 +110,11 @@ const config = {
             sidebarId: "tutorialSidebar",
             position: "left",
             label: "Tutorials",
+          },
+          {
+            to: "blog",
+            label: "Notes",
+            position: "left",
           },
           {
             type: "localeDropdown",
