@@ -87,10 +87,10 @@ const {
 
 :::warning 依賴關係沒事先確定會怎樣？
 
-重複下載：無法得知哪些套件已存在。
-幽靈依賴 (Phantom Dependencies)：專案使用了未在 package.json 定義的套件。
-依賴缺失：無法確保所有需要的套件都已就位。
-版本衝突：多個套件依賴不同版本的同一個庫。
+- 重複下載：無法得知哪些套件已存在。
+- 幽靈依賴 (Phantom Dependencies)：專案使用了未在 package.json 定義的套件。
+- 依賴缺失：無法確保所有需要的套件都已就位。
+- 版本衝突：多個套件依賴不同版本的同一個庫。
 
 :::
 
@@ -169,8 +169,8 @@ if (opts.nodeLinker === 'hoisted' && hierarchy && prevGraph) {
 這裏呼應到[原理](js-package-managers#motivateion--features)中的 link。
 其中
 
-- `linkAllPkgs` 連起了跟 global store 的 *hardlink*
-- `linkAllModules` 連起了 module 間得 *symlink*
+- `linkAllPkgs` 連起了跟 global store 的 _hardlink_
+- `linkAllModules` 連起了 module 間得 _symlink_
 
 最後，把更動記錄下來，寫進 Lockfile
 
