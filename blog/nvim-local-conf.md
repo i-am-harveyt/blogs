@@ -64,7 +64,7 @@ Neovim 在預設的情況下，可不會自己跑去讀 vs code 的設定檔。
 [neoconf.nvim](https://github.com/folke/neoconf.nvim)，
 或是土法煉鋼地，像我這次使用 `exrc` 功能。
 
-### `exrc`
+## `exrc`
 
 `exrc` 選項可以提供你自動讀取路徑中的 `.nvim.lua` 檔案，
 並且執行其中的程式碼。
