@@ -138,6 +138,7 @@ const config = {
         copyright: `Copyright © ${new Date().getFullYear()} Harvey Tung. Built with Docusaurus.`,
       },
       prism: {
+        additionalLanguages: ["git", "json", "lua", "zig"],
         theme: prismThemes.github,
         darkTheme: prismThemes.dracula,
       },
