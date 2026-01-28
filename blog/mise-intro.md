@@ -69,8 +69,22 @@ $ mise --version
 ```
 
 就代表下載完成。
-一下載完，mise 就可以立刻使用。
-若有什麼問題，可以再參考官方的安裝流程！
+
+下載完後，還要做一件事情：讓你的終端機自動讀到 mise 管理的環境：
+
+
+```shell
+# zsh (by default using mac)
+$ echo 'eval "$(mise activate zsh)"' >> ~/.zshrc
+
+# bash
+$ echo 'eval "$(mise activate bash)"' >> ~/.bashrc
+
+# fish
+# do nothing
+```
+
+這樣就可以隨開隨用囉！
 
 ### Usage
 
