@@ -37,6 +37,7 @@ sidebar_position: 3
 
 Bookmark 顧名思義就是書籤。你可以為你的 commit 打上書籤，
 標示出這個 commit 該視為在哪段編輯歷史中。
+
 如果熟悉 git 的朋友，他就是 git 中的 branch。
 
 ## Comparison
@@ -51,4 +52,6 @@ Bookmark 顧名思義就是書籤。你可以為你的 commit 打上書籤，
 在 Git 中，要明確的操作每個檔案，經過兩段操作把他們加入編輯歷史。
 且要確保 branch 跟 base 都狀態良好，否則最後要合併的時候就會出大問題。
 
-但在 jj 中，
+但在 jj 中，基本上只要 ignore 設定好，使用者就只管 commit 跟打上 bookmark 就好。
+
+接下來就是操作環節！若要跟著操作，請先[下載](/docs/Jujutsu/Getting-started.md)。
