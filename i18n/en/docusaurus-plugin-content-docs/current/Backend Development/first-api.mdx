@@ -1,0 +1,70 @@
+---
+sidebar_position: 3
+---
+
+# Your First API
+
+Before starting the server, let's write our first API so we have something to interact with.
+Insert the following between the two code blocks:
+
+```javascript
+app.get("/ping", (req, res) => {
+  res.json({ message: "pong" });
+});
+```
+
+Most backend frameworks use a similar pattern: a method on the app or router corresponds to an HTTP method.
+
+This makes the code fairly easy to read: it handles `GET` requests to `<url>/ping`.
+
+:::note
+What is `<url>`?
+When running the server on your own computer and calling it from that computer, it is `http://localhost:3000` in this example.
+:::
+
+The callback processes incoming requests. We usually call it a handler.
+A more complete Express handler signature looks like this:
+
+```javascript!
+(req, res, next) => {}
+```
+
+It has three parameters:
+
+- `req`: lets you work with the request
+- `res`: lets you work with the response
+- `next`: usually omitted unless you need to pass control to another handler
+
+Let's look more closely at this handler:
+
+```javascript
+(req, res) => {
+  res.json({ message: "pong" });
+};
+```
+
+It calls the `json` method on `res`. The method's description is:
+
+> Send JSON response.
+
+Calling it sends a response containing `{ message: "pong" }`.
+
+## Start the Server & Call API
+
+Enter the following in your terminal:
+
+```shell
+$ node index.js
+Listening port 3000
+```
+
+The callback passed to `app_.listen` runs, indicating that the server started successfully.
+
+Open another terminal and send a request to `http://localhost:3000/ping`:
+
+```shell
+$ curl -X GET http://localhost:3000/ping
+{"message":"pong"}
+```
+
+You received a response. Congratulations on writing your first API!

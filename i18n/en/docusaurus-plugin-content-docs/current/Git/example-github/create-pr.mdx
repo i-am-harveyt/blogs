@@ -1,0 +1,73 @@
+---
+sidebar_position: 4
+---
+
+# Create a Pull Request
+
+:::tip
+When collaborating, we usually avoid pushing changes directly to `develop` or `main`.
+Those branches generally represent code that is ready for testing or production.
+:::
+
+Instead, we push to a remote feature branch and open a pull request (PR). After code review and any revisions, we merge it into a branch such as `develop`.
+
+> You may have the same question I once had: why is a request to merge called a pull request?
+>
+> Honestly, I have not looked into the reason yet. I do know GitLab calls its equivalent a merge request.
+
+First, create a local branch and make some changes.
+
+```shell
+$ git branch misc/gitignore && git switch misc/gitignore
+$ echo '.DS_Store' >> .gitignore
+$ git add .gitignore
+$ git commit -m "Add: .gitignore file"
+[misc/gitignore a77fa62] Add: gitignore
+ 1 file changed, 1 insertion(+)
+ create mode 100644 .gitignore
+```
+
+We create the `misc/gitignore` branch and switch to it.
+
+Then we add a line containing `.DS_Store` to `.gitignore`.
+
+:::note[`.gitignore` & `.DS_Store`]
+
+- `.gitignore` specifies patterns for files Git should ignore, with support for exceptions.
+- `.DS_Store` stores folder customization settings on macOS. It is generally not part of the project, so we do not need to track it.
+  :::
+
+The next two commands should already be familiar, so I will skip the explanation.
+
+Now push it to the remote `misc/gitignore` branch:
+
+```shell
+$ git push origin misc/gitignore
+Enumerating objects: 4, done.
+Counting objects: 100% (4/4), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (2/2), done.
+Writing objects: 100% (3/3), 296 bytes | 296.00 KiB/s, done.
+Total 3 (delta 0), reused 0 (delta 0), pack-reused 0
+remote:
+remote: Create a pull request for 'misc/gitignore' on GitHub by visiting:
+remote:      https://github.com/i-am-harveyt/113-2-dbms/pull/new/misc/gitignore
+remote:
+To github.com:i-am-harveyt/113-2-dbms.git
+ * [new branch]      misc/gitignore -> misc/gitignore
+```
+
+The output tells us that the local branch was pushed to the remote. Since `misc/gitignore` did not exist there yet, Git created it.
+
+Open the URL from the output to reach the pull request creation page:
+
+![image](https://hackmd.io/_uploads/SJafeJnDkg.png)
+
+There is a lot on this screen. Here are a few things to pay attention to; you can explore the rest yourself.
+
+- The two dropdowns at the top select the destination branch and the branch whose changes you want to merge. Check both carefully.
+- The current title is `Add: gitignore`; change it as appropriate.
+- Teams often have a description template. Here, I have written my own description.
+- You can assign a reviewer in the sidebar. If branch rules require approval, that approval is needed before merging.
+
+Click `Create pull request` to finish.

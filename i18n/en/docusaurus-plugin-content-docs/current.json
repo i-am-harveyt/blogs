@@ -1,0 +1,86 @@
+{
+  "version.label": {
+    "message": "Next",
+    "description": "The label for version current"
+  },
+  "sidebar.tutorialSidebar.category.Git Tutorial": {
+    "message": "Git Tutorial",
+    "description": "The label for category 'Git Tutorial' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Git Tutorial.link.generated-index.description": {
+    "message": "Git Tutorial",
+    "description": "The generated-index page description for category 'Git Tutorial' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Example: Local Repo": {
+    "message": "Example: Local Repo",
+    "description": "The label for category 'Example: Local Repo' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Example: Local Repo.link.generated-index.description": {
+    "message": "Git Basic Tutorial",
+    "description": "The generated-index page description for category 'Example: Local Repo' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Branch": {
+    "message": "Branch",
+    "description": "The label for category 'Branch' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Branch.link.generated-index.description": {
+    "message": "Git Basic Tutorial",
+    "description": "The generated-index page description for category 'Branch' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Example: Local Advanced": {
+    "message": "Example: Local Advanced",
+    "description": "The label for category 'Example: Local Advanced' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Example: Local Advanced.link.generated-index.description": {
+    "message": "Git Basic Tutorial",
+    "description": "The generated-index page description for category 'Example: Local Advanced' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Rollback": {
+    "message": "Rollback",
+    "description": "The label for category 'Rollback' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Rollback.link.generated-index.description": {
+    "message": "Git Basic Tutorial",
+    "description": "The generated-index page description for category 'Rollback' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Example: Github": {
+    "message": "Example: Github",
+    "description": "The label for category 'Example: Github' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Example: Github.link.generated-index.description": {
+    "message": "Git Basic Tutorial",
+    "description": "The generated-index page description for category 'Example: Github' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Appendix": {
+    "message": "Appendix",
+    "description": "The label for category 'Appendix' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Appendix.link.generated-index.description": {
+    "message": "Git Basic Tutorial",
+    "description": "The generated-index page description for category 'Appendix' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.JavaScript Tutorial": {
+    "message": "JavaScript Tutorial",
+    "description": "The label for category 'JavaScript Tutorial' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.JavaScript Tutorial.link.generated-index.description": {
+    "message": "JavaScript Tutorial",
+    "description": "The generated-index page description for category 'JavaScript Tutorial' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Backend Dev Tutorial": {
+    "message": "Backend Dev Tutorial",
+    "description": "The label for category 'Backend Dev Tutorial' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Routing": {
+    "message": "Routing",
+    "description": "The label for category 'Routing' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.POST": {
+    "message": "POST",
+    "description": "The label for category 'POST' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Login": {
+    "message": "Login",
+    "description": "The label for category 'Login' in sidebar 'tutorialSidebar'"
+  }
+}

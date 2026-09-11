@@ -1,30 +1,31 @@
 ---
+date: 2025-12-13T08:29:18
 title: JS Package Managers -- pnpm (II)
-description: The second post of package manager exploration, continuing the pnpm part
+description: A closer look at pnpm's dependency graph, package fetching, and linking process.
 slug: js-package-managers-pnpm
 tags: [javascript, package-manager]
 hide_table_of_contents: false
 ---
 
-在更新這個部落格的依賴套件時，發現我還是對這些 JS 開發基礎建設的認識太少了。
+While updating this blog's dependencies, I realized how little I still knew about JavaScript development infrastructure.
 
-雖然我目前還不具備鑽研底層 runtime 的能力與時間，但學習一下 package manager 的原理應該還是可以的。
+I do not yet have the time or expertise to dig deeply into runtimes, but learning how package managers work seems manageable.
 
-出於個人偏好，我將會調查一下 [pnpm](https://pnpm.io/) 以及 [bun](https://bun.com/) 的設計思路以及一些程式碼片段，希望可以有一些初步的理解。
+Out of personal interest, I will explore the design of [pnpm](https://pnpm.io/) and [Bun](https://bun.com/), along with some code, to build an initial understanding.
 
-本篇是第二篇，有關一些背景及前置知識，歡迎查閱[上一篇](./package-managers.md)
+This is the second post. For background and prerequisites, see the [previous post](./package-managers.md).
 
 <!-- truncate -->
 
 ## PNPM, after `headlessInstall`
 
-我們接續著看看，`headlessInstall` 裡面到底做了什麼？後面又做了什麼呢？
+Let's continue: what happens inside `headlessInstall`, and what follows it?
 
 ### `headlessInstall`
 
-這邊補充一下，為什麼特別說 `headless`？
+First, why is it called `headless`?
 
-我們根據[官方文檔](https://pnpm.io/settings#preferfrozenlockfile)，可以看到：
+According to the [official documentation](https://pnpm.io/settings#preferfrozenlockfile):
 
 > preferFrozenLockfile
 >
@@ -34,14 +35,14 @@ hide_table_of_contents: false
 > When set to true and the available pnpm-lock.yaml satisfies the package.json dependencies directive, a headless installation is performed.
 > A headless installation skips all dependency resolution as it does not need to modify the lockfile.
 
-所以如果今天已經有一個既成的 Lockfile，並且*沒有下達增減更新 package 的指令*，
-那就是*純純的根據 lockfile 下載下來*，不用做額外的事情。
+If a suitable lockfile already exists and we are *not adding, removing, or updating packages*,
+installation can proceed *directly from the lockfile*, without additional dependency resolution.
 
-好，補充完了，我們開始繼續追程式碼。
+With that clarified, let's return to the code.
 
-那我們一步一步看到底在 install 什麼。
+We will inspect the installation step by step.
 
-首先，
+First:
 
 ```javascript
 const lockfileDir = opts.lockfileDir;
@@ -59,9 +60,9 @@ if (wantedLockfile == null) {
 }
 ```
 
-這顯示出，下載是根據已經包在 `opts` 中的 `wantedLockfile` 或是 `lockfileDir` 來啟動，並且如果沒有 Lockfile 會出錯。
+This shows that installation uses `wantedLockfile` from `opts`, or reads it from `lockfileDir`. It throws an error if there is no lockfile.
 
-那為什麼需要 lockfile 呢？要利用它轉化成 packages 間的依賴關係圖：
+Why do we need the lockfile? To turn it into a dependency graph:
 
 ```javascript
 const {
@@ -85,16 +86,16 @@ const {
     ));
 ```
 
-:::warning 依賴關係沒事先確定會怎樣？
+:::warning What if dependencies are not determined first?
 
-- 重複下載：無法得知哪些套件已存在。
-- 幽靈依賴 (Phantom Dependencies)：專案使用了未在 package.json 定義的套件。
-- 依賴缺失：無法確保所有需要的套件都已就位。
-- 版本衝突：多個套件依賴不同版本的同一個庫。
+- Duplicate downloads: we cannot reliably identify which packages are already available.
+- Phantom dependencies: a project may use packages it did not declare in package.json.
+- Missing dependencies: required packages may not all be in place.
+- Version conflicts: multiple packages may require different versions of the same library.
 
 :::
 
-這裏我們深入看 `lockfileToDepGraph`:
+Let's look inside `lockfileToDepGraph`:
 
 ```javascript
 export async function lockfileToDepGraph (
@@ -110,7 +111,7 @@ export async function lockfileToDepGraph (
 }
 ```
 
-再看進 `buildGraphFromPackages`:
+Then inside `buildGraphFromPackages`:
 
 ```javascript
 async function buildGraphFromPackages (
@@ -134,8 +135,8 @@ async function buildGraphFromPackages (
 }
 ```
 
-可以看到抓東西大概是在這個地方。因此 *pnpm 在此時就已經開始抓套件的檔案*了。
-由於下載可能需要若干時間，所以在發起下載後，pnpm 會*開始計算與建立依賴關係*（圖）：
+Fetching starts around here. *Pnpm has already begun fetching package files at this point.*
+Since downloads take time, pnpm can *calculate and build the dependency graph* after initiating them:
 
 ```javascript
 const depNodes = Object.values(graph);
@@ -166,13 +167,13 @@ if (opts.nodeLinker === 'hoisted' && hierarchy && prevGraph) {
 ...
 ```
 
-這裏呼應到[原理](./package-managers.md#motivateion--features)中的 link。
-其中
+This connects to the links discussed in the earlier [design overview](./package-managers.md#motivateion--features).
+Specifically:
 
-- `linkAllPkgs` 連起了跟 global store 的 _hardlink_
-- `linkAllModules` 連起了 module 間得 _symlink_
+- `linkAllPkgs` imports package files from the global store, using _hard links_ where applicable.
+- `linkAllModules` creates _symlinks_ between modules.
 
-最後，把更動記錄下來，寫進 Lockfile
+Finally, record the changes in the lockfile:
 
 ```javascript
 ...
@@ -192,7 +193,7 @@ if (opts.nodeLinker === 'hoisted' && hierarchy && prevGraph) {
 ...
 ```
 
-因為跟這些寫入並不是同步的，所以在整個下載流程結束前，要等待並確保實際的「下載」完成：
+Since fetching runs asynchronously alongside this work, the installation must wait for the actual downloads to finish before completing:
 
 ```javascript
 // waiting till package requests are finished
@@ -207,13 +208,13 @@ await Promise.all(
 ...
 ```
 
-至此，下載就在這裡告一段落。
+That brings the installation process to its conclusion.
 
-## 後記
+## Afterword
 
-pnpm 的探查至此告一段落。
+This wraps up my initial exploration of pnpm.
 
-這邊留下一段小小的空白：資料具體是怎麼存？之前說的 hash 跟在套件更新時比較，並只存有變動的檔案又是什麼意思呢？
-也許我之後會再繼續寫文把這段空白補上，但目前這個系列的主旨是探究 package manager 的設計差異，所以我準備要往 bun 去了。
+There is still a small gap: how exactly is the data stored? What do the hashes and comparisons across package versions look like, and how does pnpm store only changed files?
+I may return to fill in that gap later. For now, this series focuses on differences in package manager design, so I am moving on to Bun.
 
-敬請期待！
+Stay tuned!

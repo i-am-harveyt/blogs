@@ -1,0 +1,20 @@
+---
+sidebar_position: 4
+---
+
+# Why We Need `revert` and `reset`?
+
+You may now be wondering:
+
+> Hey, TA,
+> `reset` looks great. It even removes the record of our mistake.
+> Why do we need `revert`?
+
+The distinction is whether we should preserve the history:
+
+- `main` is typically _public_. **Once history is shared, we should preserve it**, adding a rollback commit when needed.
+- On an unshared _private_ branch, **unwanted commits can be unnecessary clutter**, with no need to publish them.
+  In that case, `reset` can help keep the history tidy.
+
+There are exceptions where history needs to be rewritten to remove something.
+For example, a commit might contain sensitive information.

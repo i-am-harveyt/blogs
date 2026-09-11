@@ -1,0 +1,85 @@
+---
+sidebar_position: 2
+---
+
+# Getting Started
+
+## Init a Project
+
+Initialize a project with:
+
+```shell
+$ pnpm init && git init
+```
+
+You should find a `package.json` file in the directory.
+
+Open `package.json` in your favorite editor,
+and add a line below description as shown:
+
+```json
+{
+    ...,
+    "description": "",
+    "type": "module",
+    ...,
+	"scripts": {
+		"test": ...,
+		"dev": "node app.js"
+	},
+	...
+}
+```
+
+This enables [ES modules](https://www.w3schools.com/js/js_es6.asp).
+The details take some explaining, so we will skip them for now. Feel free to explore them if you are interested.
+
+Next, create a `.gitignore` file with the following contents:
+
+```
+# ignore the js node_modules
+node_modules
+```
+
+## Install ExpreesJS
+
+Run this command
+
+```shell
+$ pnpm add express
+```
+
+to install the package.
+
+## Create the Server
+
+:::note[Why do these examples differ from the official documentation?]
+ExpressJS was created when CommonJS (CJS) was the mainstream module format.
+Because of its long history and widespread use, a wholesale switch to ES modules would be disruptive.
+Since we use ES modules, some operations differ from the official examples.
+Most of the differences concern importing packages; the rest is largely the same.
+:::
+
+Create an `app.js` file in the project directory.
+
+Here is our first noticeable difference from the official examples. Import `express`:
+
+```javascript
+import express from "express";
+```
+
+Your editor may not even suggest this form.
+I found it online too. You can compare the rest with the official documentation.
+
+First, initialize an Express app:
+
+```javascript
+const app = express();
+
+app.listen(3_000, () => {
+  console.log(`Listening port ${3_000}`);
+});
+```
+
+The `app.listen` function starts the server and listens for incoming requests. I have set the port to 3000.
+Requests sent to port 3000 on your computer will now be handled by the Express server.

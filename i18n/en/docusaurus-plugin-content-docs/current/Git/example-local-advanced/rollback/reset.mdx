@@ -1,0 +1,57 @@
+---
+sidebar_position: 3
+---
+
+# Reset a Commit
+
+Next, let's look at reset.
+
+Create a branch named `doc/tech-stack` and switch to it.
+
+```bash
+$ git branch doc/tech-stack && git switch doc/tech-stack
+```
+
+Add some content and commit it:
+
+```bash
+$ echo "## Tech Stack\nNot desirable change" >> README.md && git add README.md && git commit -m "Not desirable change"
+```
+
+Then inspect the log:
+
+```bash
+$ git log --oneline
+d277c42 (HEAD -> doc/tech-stack) Not desirable change
+634fee5 (main) Revert "Not desirable change"
+af8e253 Not desirable change
+d05e621 Merge branch 'doc/features'
+d2e483f Add: Installation section
+1cb8880 (doc/features) Add: Features section
+98ad8b1 Add: Introduction section
+436b67d First Commit
+```
+
+To remove the latest commit from this branch's history, use `git reset`:
+
+```shell
+$ git reset 634fee5
+Unstaged changes after reset:
+M       README.md
+```
+
+Notice that the changes to `README.md` are now unstaged. Check the log:
+
+```bash
+$ git log --oneline
+634fee5 (HEAD -> doc/tech-stack, main) Revert "Not desirable change"
+af8e253 Not desirable change
+d05e621 Merge branch 'doc/features'
+d2e483f Add: Installation section
+1cb8880 (doc/features) Add: Features section
+98ad8b1 Add: Introduction section
+436b67d First Commit
+```
+
+The unwanted commit is no longer in this branch's history!
+Its changes remain in the working directory, outside the staging area, as though we had not committed them.

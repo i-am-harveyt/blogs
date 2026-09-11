@@ -1,0 +1,14 @@
+{
+  "homepage.tagline": {
+    "message": "一起來寫程式吧！"
+  },
+  "homepage.github": {
+    "message": "我的 GitHub"
+  },
+  "homepage.title": {
+    "message": "歡迎來到 {title}"
+  },
+  "homepage.description": {
+    "message": "Harvey Tung 的程式設計教學與開發筆記。"
+  }
+}
