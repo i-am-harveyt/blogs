@@ -2,11 +2,17 @@
   "name": "dbms-113-2",
   "version": "0.0.0",
   "private": true,
+  "packageManager": "pnpm@10.29.3",
   "pnpm": {
-	  "overrides": {
-      "qs": "^6.14.1",
-	  "lodash": "^4.17.23",
-	  "lodash-es": "^4.17.23"
+    "overrides": {
+      "qs": "^6.16.0",
+      "lodash": "^4.18.0",
+      "lodash-es": "^4.18.0",
+      "serialize-javascript@<7.0.5": "^7.0.5",
+      "sockjs>uuid": "^11.1.1"
+    },
+    "patchedDependencies": {
+      "image-size@2.0.2": "patches/image-size@2.0.2.patch"
     }
   },
   "scripts": {
@@ -18,24 +24,25 @@
     "clear": "docusaurus clear",
     "serve": "docusaurus serve",
     "write-translations": "docusaurus write-translations",
-    "write-heading-ids": "docusaurus write-heading-ids"
+    "write-heading-ids": "docusaurus write-heading-ids",
+    "test:security": "node --test tests/image-size-security.test.mjs"
   },
   "dependencies": {
-    "@docusaurus/core": "3.9.2",
-    "@docusaurus/preset-classic": "3.9.2",
-    "@docusaurus/theme-mermaid": "^3.9.2",
-    "@mdx-js/react": "^3.1.0",
+    "@docusaurus/core": "3.10.2",
+    "@docusaurus/preset-classic": "3.10.2",
+    "@docusaurus/theme-mermaid": "3.10.2",
+    "@mdx-js/react": "^3.1.1",
     "clsx": "^2.1.1",
     "image-size": "^2.0.2",
     "prism-react-renderer": "^2.4.1",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "rehype-katex": "^7.0.1",
     "remark-math": "^6.0.0"
   },
   "devDependencies": {
-    "@docusaurus/module-type-aliases": "3.9.2",
-    "@docusaurus/types": "3.9.2"
+    "@docusaurus/module-type-aliases": "3.10.2",
+    "@docusaurus/types": "3.10.2"
   },
   "browserslist": {
     "production": [
