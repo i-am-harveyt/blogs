@@ -1,0 +1,42 @@
+---
+sidebar_position: 3
+---
+
+# Push Local Repo to Remote
+
+![image](https://hackmd.io/_uploads/SJuL42oDJl.png)
+
+This page has two code blocks. The first is useful if you do not already have a local Git repository.
+Since we already have one, let's look at the second:
+
+```shell
+$ git remote add origin git@github.com:i-am-harveyt/113-2-dbms.git
+
+$ git branch -M main
+
+$ git push -u origin main
+Enumerating objects: 3, done.
+Counting objects: 100% (3/3), done.
+Writing objects: 100% (3/3), 246 bytes | 246.00 KiB/s, done.
+Total 3 (delta 0), reused 0 (delta 0), pack-reused 0
+To github.com:i-am-harveyt/113-2-dbms.git
+ * [new branch]      main -> main
+branch 'main' set up to track 'origin/main'.
+```
+
+If you are comfortable reading reference documentation, try `git help git-remote`. Here is my simplified explanation:
+
+- `git remote add <name> <URL>` adds a remote repository to the set of remotes tracked by your local repository.
+  - These examples use SSH to authenticate with GitHub.
+  - For setup instructions, see [Adding a new SSH key to your GitHub account](https://docs.github.com/en/enterprise-cloud@latest/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account?platform=mac).
+- `git branch -M main` renames the branch to `main`, as discussed earlier.
+- Let's break down `git push -u origin main`:
+  - `git push` sends commits to the remote.
+  - `-u` is short for `--set-upstream`, which sets the upstream tracking reference.
+  - `origin main`
+    - `origin` is the remote repository's name, set by the earlier command.
+    - `main` is the branch on origin.
+
+After running the commands, you should see your commits on GitHub, as shown below:
+
+![image](https://hackmd.io/_uploads/ryhRdCsvye.png)

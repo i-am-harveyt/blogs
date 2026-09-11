@@ -1,0 +1,187 @@
+---
+sidebar_position: 2
+---
+
+# Signup
+
+If you followed the previous chapters, you should have an idea of what comes next.
+
+Add the following before `app.listen` in `app.js`:
+
+```javascript
+...
+app.post("/user/signup", signup);
+app.listen(3000, () => ...);
+```
+
+If you paid attention to the first API, you may notice that I am no longer using an arrow function here.
+This is a personal preference: I like to define callbacks separately.
+
+Add a function before the `app` declaration:
+
+```javascript
+function signup(req, res) {}
+...
+const app = express();
+...
+```
+
+We still pass `req` and `res` into the function.
+However, hovering over them reveals that the editor does not know their types. Let's add JSDoc:
+
+```javascript
+/**
+ * Signup with `name`, `email` and `password` in request body.
+ *
+ * @param {express.Request} req
+ * @param {express.Response} res
+ */
+function signup(req, res) {}
+```
+
+Now the editor understands our parameter types.
+
+Please note:
+
+:::caution
+Our server should use a non-blocking architecture.
+That way, a slow query does not prevent other requests from being handled.
+:::
+
+Start by adding `async` before `function`:
+
+```javascript
+...
+async function signup(req, res) {}
+```
+
+There are two things I would especially like you to pay attention to:
+
+:::important
+Two points in this section will matter for the material that follows:
+
+1. Extracting data from a request
+2. Working with the MySQL client
+
+Neither is difficult. Just become familiar enough with them to recognize them later.
+:::
+
+First, extract the data:
+
+- `name`
+- `email`
+- `password`
+
+```javascript
+async function signup(req, res) {
+  const name = req.body["name"];
+  const email = req.body["email"];
+  const password = req.body["password"];
+  // or, alternatively
+  const { name, email, password } = req.body;
+  // getting data of field having same name with variables
+  console.log(name, email, password);
+}
+```
+
+As an aside, I really like using `const`, especially after learning a little Rust.
+It makes it easier to reason about the intended type and value of a binding.
+
+If you try printing these three values now, you may find that they are `undefined`.
+Express does not parse `req.body` as JSON by default, and JSON is the format we want.
+
+Add the following to `app.js`:
+
+```javascript
+const app = express();
+app.use(express.json());
+...
+```
+
+We will skip input validation for now and move on to accessing the database.
+
+First, get a connection from the pool, then execute a query:
+
+```javascript
+const mysql = await mysqlConnectionPool.getConnection();
+await mysql.query(
+  `
+    INSERT INTO User (Name, Email, Password)
+    VALUES (?, ?, ?)`,
+  [name, email, password],
+);
+```
+
+Getting the connection takes just one line. Let's break down the query:
+
+1. Backticks delimit a template literal. It is similar to a string, but supports line breaks and value interpolation.
+2. This also explains why the backticks inside the literal need escaping.
+3. Each `?` is a placeholder, replaced by the supplied values in order.
+4. The array at the end holds those values.
+
+Before running it, consider this: _inserting data can fail_, for example because an ID already exists.
+Let's add `try...catch` to return an error message if that happens:
+
+```javascript
+try {
+  await mysql.query(
+    `
+      INSERT INTO User (Name, Email, Password)
+      VALUES (?, ?, ?)`,
+    [name, email, password],
+  );
+  // return succcessfully created
+  res.status(201).json({ status: "created" });
+} catch (err) {
+  // return error
+  res.status(400).json({ error: "User account has been used!" });
+}
+```
+
+Also, take a look at `mysqlConnectionPool`. It has not been defined here yet, has it?
+That is because `app.js` has not imported it from `lib/mysql.js`. Add the import:
+
+```javascript
+import express from "express";
+import mysqlConnectionPool from "./lib/mysql.js";
+```
+
+Now we can run the server. Open your terminal:
+
+```shell
+$ pnpm run dev # run this in your project root
+
+> dbms-example@1.0.0 dev /home/ht/Desktop/DBMS/dbms-example
+> node app.js
+```
+
+Open another terminal and call the API:
+
+```shell
+$ curl -X POST \
+    -H "Content-Type: application/json" \
+    -d '{"email": "ta.harvey@nccu.edu.tw", "name": "harvey", "password": "dbms"}' \
+    http://localhost:3000/user/signup
+{"status":"ok"}
+```
+
+That looks successful. Let's see what happens with a duplicate:
+
+```shell
+$ curl -X POST \
+    -H "Content-Type: application/json" \
+    -d '{"email": "ta.harvey@nccu.edu.tw", "name": "harvey", "password": "dbms"}' \
+    http://localhost:3000/user/signup
+{"error":"User account has been used!"}
+```
+
+The error response is triggered, which is what we expected.
+
+That wraps up our first POST API.
+
+Attentive readers may have noticed some things I left out:
+
+1. Input validation
+2. Password hashing
+
+I will leave those unfinished parts as exercises. I hope you learn something by implementing them!

@@ -1,0 +1,112 @@
+---
+sidebar_position: 2
+---
+
+# Logic
+
+Everything before the SQL is much the same, so here is the code:
+
+```javascript
+/**
+ * Login with `account` and `password` in request body.
+ *
+ * @param {express.Request} req
+ * @param {express.Response} res
+ */
+async function login(req, res) {
+  const { email, password } = req.body;
+  const mysql = await mysqlConnectionPool.getConnection();
+  try {
+  } catch (err) {}
+}
+app.post("/user/login", login);
+```
+
+Now let's write the SQL query:
+
+```javascript
+const [results] = await mysql.query(
+  `
+		SELECT UserId, Name, Email FROM \`User\`
+		WHERE
+		Email=? AND
+		Password=?
+		`,
+  [email, password],
+);
+```
+
+What is `results`? Here is a preview of its value:
+
+```javascript
+[
+  [ { UserId: 1, Name: 'harvey', Email: 'ta.harvey@nccu.edu.tw' } ],
+  [
+    `UserId` INT NOT NULL PRIMARY KEY,
+    `Name` VARCHAR(255) NOT NULL,
+    `Email` VARCHAR(255) NOT NULL
+  ]
+]
+```
+
+It is an array: the first item is an array of data objects, and the second contains field information.
+We only need the data, so change `results` to `[results]`. This destructures the first item, the array of data objects.
+
+First, update the code like this:
+
+```javascript
+const [results] = await mysql.query(
+...
+);
+res.status(200).json({results});
+```
+
+Restart the server, then use this command to send the request:
+
+```shell
+$ curl -X POST \
+    -H "Content-Type: application/json" \
+    -d '{"email": "ta.harvey@nccu.edu.tw", "password": "dbms"}' \
+    http://localhost:3000/user/login
+```
+
+You should see:
+
+```
+{"results":[{"UserId": 1,"Name":"harvey","Email":"ta.harvey@nccu.edu.tw"}]}
+```
+
+:::caution
+Try changing the password to "DBMS". You may find that the request still succeeds.
+Here is a small exercise: how would you handle that?
+:::
+
+Now that we can retrieve data, what cases need special handling?
+
+1. The database operation itself could fail, as in the sign-up example.
+2. What if no matching user exists?
+
+:::tip[Practice]
+The first case is straightforward: handle it with `try...catch...` again.
+Think about how you would do that.
+:::
+
+Let's focus on the second case. What does "no matching user" mean? It means the query returns zero rows!
+
+Since `results` is an array of data objects, we can check whether its length is zero. Add:
+
+```javascript
+const [results] = await mysql.query(...);
+if (results.length === 0)
+    throw new Error("Wrong account or password");
+```
+
+My implementation here is deliberately simple. Feel free to add a more elaborate design.
+
+Next, return the user information with two fields, `id` and `token`:
+
+```javascript
+res.status(200).json({ id: results[0]["UserId"], token: "" });
+```
+
+That completes this part. We will discuss the token next!

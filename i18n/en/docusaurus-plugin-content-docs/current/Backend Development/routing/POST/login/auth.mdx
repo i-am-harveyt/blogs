@@ -1,0 +1,71 @@
+---
+sidebar_position: 3
+---
+
+# Authorization
+
+Have you ever wondered how a website knows who you are after you log in?
+How does it identify the user?
+
+There are many approaches. Here we will use a simple, common one: JWT bearer authentication.
+
+:::note
+Look up JWTs and bearer tokens if you are curious.
+Both are useful concepts in web development.
+For now, I will skip the background and go straight to the code.
+:::
+
+Install the [jose](https://github.com/panva/jose) package by entering this in your terminal:
+
+```shell
+$ pnpm add jose
+```
+
+Next, import `jose` at the top of the file:
+
+```javascript
+import * as jose from "jose";
+...
+```
+
+Now we can sign a JWT. Here is the code, followed by an explanation:
+
+```javascript
+const token = await new jose.SignJWT({ id: results[0]["UserId"] })
+  .setProtectedHeader({ alg: "HS256" })
+  .setExpirationTime("2h")
+  .sign(new TextEncoder().encode("secret"));
+```
+
+- `jose.SignJWT` creates the JWT builder; signing is asynchronous, so the expression uses `await`.
+  - Its argument is the payload to sign.
+  - We want to include the user's ID, so we pass `{ id:... }`.
+- `setProtectedHeader` configures header fields. Here we set the algorithm to HS256.
+- `setExpirationTime` sets the expiration time. Once it expires, a new token is needed.
+- `sign` signs the token. Its argument is the secret key, so keep it private. It is shown here for demonstration purposes.
+
+Finally, change the returned token value from `""` to `token`. The response will look like this:
+
+```
+{"id":1,"token":"eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZXhwIjoxNzM5Mjg4NTc3fQ.3atOvmwQBx0kVzedbjzBazSva9jxsyeLgqDVJ4iFK6U"}
+```
+
+The frontend can send this token back with later requests. After verifying it, the backend can also extract the ID.
+
+For the implementation details, see the [docs](https://github.com/panva/jose/blob/HEAD/docs/jwt/verify/functions/jwtVerify.md).
+
+:::info[Troubleshooting: `crypto is not defined` Error]
+If you are using Node 18, you may encounter a problem here.
+
+In that environment, `crypto` may not be available globally, so accessing it directly from `jose` can cause an error.
+
+Here is a workaround:
+
+1. Open `package.json`.
+2. Add `--experimental-global-webcrypto` to `scripts.dev`, as shown below.
+3. Restart the server. It should now work.
+
+```json
+"dev": "node --experimental-global-webcrypt app.js"
+```
+:::

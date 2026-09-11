@@ -1,0 +1,64 @@
+---
+sidebar_position: 2
+---
+
+# Revert a Commit
+
+First, create an unwanted commit.
+Add a line containing "Not desirable change" to the bottom of `README.md`:
+
+```bash
+$ echo "Not desirable change" >> README.md && git add README.md && git commit -m "Not desirable change"
+```
+
+Check the log:
+
+```bash
+$ git log --oneline
+af8e253 (HEAD -> main) Not desirable change
+d05e621 Merge branch 'doc/features'
+d2e483f Add: Installation section
+1cb8880 (doc/features) Add: Features section
+98ad8b1 Add: Introduction section
+436b67d First Commit
+```
+
+Let's revert it. We want to undo the changes introduced by `af8e253`, so target that commit:
+
+```bash
+$ git revert af8e253
+```
+
+The terminal editor opens. Exit as before, and you should see:
+
+```bash
+$ git revert af8e253
+[main 634fee5] Revert "Not desirable change"
+ 1 file changed, 1 deletion(-)
+```
+
+Now check the log:
+
+```bash
+$ git log --oneline
+634fee5 (HEAD -> main) Revert "Not desirable change"
+af8e253 Not desirable change
+d05e621 Merge branch 'doc/features'
+d2e483f Add: Installation section
+1cb8880 (doc/features) Add: Features section
+98ad8b1 Add: Introduction section
+436b67d First Commit
+```
+
+There is a new revert commit.
+
+Inspect `README.md`:
+
+```
+# DBMS TA Session Git Example
+## Introduction
+## Installation
+## Features
+```
+
+"Not desirable change" is indeed gone!
