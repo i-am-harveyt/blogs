@@ -15,11 +15,11 @@ jobs:
           fetch-depth: 0
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 9
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+      - name: Test dependency security patches
+        run: pnpm test:security
       - name: Build website
         run: pnpm run build
 
